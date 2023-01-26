@@ -14,23 +14,24 @@ export default function App() {
       .then((data) => {
         const { fact } = data
         setFact(fact)
-
-        const threeFirstWords = fact.split(' ').slice(0, 3).join(' ')
-        // const threeFirstWords = fact.split(' ', 3).join(' ')
-        console.log(threeFirstWords)
-
-        // fetch(CAT_ENPOINT_IMAGE_URL)
-        fetch(
-          `https://cataas.com/cat/says/${threeFirstWords}?size=50&color=red&json=true`
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            console.log(data.url)
-            const { url } = data
-            setImageUrl(url)
-          })
       })
   }, [])
+
+  useEffect(() => {
+    if (!fact) return
+    const threeFirstWords = fact.split(' ').slice(0, 3).join(' ')
+
+    console.log(threeFirstWords)
+
+    fetch(
+      `https://cataas.com/cat/says/${threeFirstWords}?size=50&color=red&json=true`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        const { url } = data
+        setImageUrl(url)
+      })
+  }, [fact])
 
   return (
     <main>
