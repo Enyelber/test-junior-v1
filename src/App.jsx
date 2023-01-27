@@ -1,26 +1,14 @@
 import { useEffect, useState } from 'react'
 import './App.css'
+import { getRandomFact } from './services/facts'
 
-const CAT_ENPOINT_RAMDOM_FACT = 'https://catfact.ninja/fact'
-// const CAT_ENPOINT_IMAGE_URL = `https://cataas.com/cat/says/${firsWord}?size=50&color=white&json=true`
 const CAT_PREFIX_IMAGE_URL = 'https://cataas.com'
 export default function App() {
   const [fact, setFact] = useState()
   const [imageUrl, setImageUrl] = useState()
 
   useEffect(() => {
-    fetch(CAT_ENPOINT_RAMDOM_FACT)
-      .then((response) => {
-        if (!response.ok) throw new Error('Error feching fact')
-        return response.json()
-      })
-      .then((data) => {
-        const { fact } = data
-        setFact(fact)
-      })
-      .catch((err) => {
-        console.error(err)
-      })
+    getRandomFact().then(setFact)
   }, [])
 
   useEffect(() => {
@@ -37,9 +25,16 @@ export default function App() {
       })
   }, [fact])
 
+  const handdleClick = async () => {
+    const newFact = await getRandomFact()
+    setFact(newFact)
+  }
   return (
     <main>
       <h1>APP de Gatos</h1>
+
+      <button onClick={handdleClick}>Get new fact</button>
+
       {fact && <p>{fact}</p>}
       {imageUrl && (
         <img
