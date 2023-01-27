@@ -10,18 +10,22 @@ export default function App() {
 
   useEffect(() => {
     fetch(CAT_ENPOINT_RAMDOM_FACT)
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) throw new Error('Error feching fact')
+        return response.json()
+      })
       .then((data) => {
         const { fact } = data
         setFact(fact)
+      })
+      .catch((err) => {
+        console.error(err)
       })
   }, [])
 
   useEffect(() => {
     if (!fact) return
     const threeFirstWords = fact.split(' ').slice(0, 3).join(' ')
-
-    console.log(threeFirstWords)
 
     fetch(
       `https://cataas.com/cat/says/${threeFirstWords}?size=50&color=red&json=true`
