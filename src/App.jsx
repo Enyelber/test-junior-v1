@@ -1,35 +1,20 @@
-import { useEffect, useState } from 'react'
 import './App.css'
-import { getRandomFact } from './services/facts'
-import { getImagenFact } from './services/imagenFacts'
+import { useCatImage } from './hooks/useCatImage.js'
+import { useCatFact } from './hooks/useCatFact.js'
 
 const CAT_PREFIX_IMAGE_URL = 'https://cataas.com'
+
 export default function App() {
-  const [fact, setFact] = useState()
-  const [imageUrl, setImageUrl] = useState()
-
-  useEffect(() => {
-    getRandomFact().then((newFact) => setFact(newFact))
-  }, [])
-
-  useEffect(() => {
-    if (!fact) return
-    const threeFirstWords = fact.split(' ').slice(0, 3).join(' ')
-    getImagenFact(threeFirstWords).then((data) => {
-      setImageUrl(data)
-    })
-  }, [fact])
+  const { fact, refreshFact } = useCatFact()
+  const { imageUrl } = useCatImage({ fact })
 
   const handdleClick = async () => {
-    const newFact = await getRandomFact()
-    setFact(newFact)
+    refreshFact()
   }
   return (
     <main>
       <h1>APP CAT</h1>
-
       <button onClick={handdleClick}>Get new fact</button>
-
       {fact && <p>{fact}</p>}
       {imageUrl && (
         <img
