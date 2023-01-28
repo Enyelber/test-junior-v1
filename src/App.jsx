@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import { getRandomFact } from './services/facts'
+import { getImagenFact } from './services/imagenFacts'
 
 const CAT_PREFIX_IMAGE_URL = 'https://cataas.com'
 export default function App() {
@@ -8,21 +9,15 @@ export default function App() {
   const [imageUrl, setImageUrl] = useState()
 
   useEffect(() => {
-    getRandomFact().then(setFact)
+    getRandomFact().then((newFact) => setFact(newFact))
   }, [])
 
   useEffect(() => {
     if (!fact) return
     const threeFirstWords = fact.split(' ').slice(0, 3).join(' ')
-
-    fetch(
-      `https://cataas.com/cat/says/${threeFirstWords}?size=50&color=red&json=true`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        const { url } = data
-        setImageUrl(url)
-      })
+    getImagenFact(threeFirstWords).then((data) => {
+      setImageUrl(data)
+    })
   }, [fact])
 
   const handdleClick = async () => {
@@ -31,7 +26,7 @@ export default function App() {
   }
   return (
     <main>
-      <h1>APP de Gatos</h1>
+      <h1>APP CAT</h1>
 
       <button onClick={handdleClick}>Get new fact</button>
 
